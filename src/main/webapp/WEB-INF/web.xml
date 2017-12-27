@@ -1,0 +1,43 @@
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+	<context-param>
+		<param-name>table_postfix</param-name>
+		<param-value>_point1</param-value>
+	</context-param>
+	<context-param>
+		<param-name>sw_point</param-name>
+		<param-value>sw_info</param-value>
+	</context-param>
+	<context-param>
+		<param-name>xs_point1</param-name>
+		<param-value>xs_info1</param-value>
+	</context-param>
+
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/*</url-pattern>
+
+			<http-method>GET</http-method>
+			<http-method>PUT</http-method>
+			<http-method>HEAD</http-method>
+			<http-method>TRACE</http-method>
+			<http-method>POST</http-method>
+			<http-method>DELETE</http-method>
+			<http-method>OPTIONS</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>tomcat</role-name>
+		</auth-constraint>
+
+	</security-constraint>
+
+	<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>Tomcat Manager Application</realm-name>
+	</login-config>
+
+	<security-role>
+		<role-name>tomcat</role-name>
+	</security-role>
+</web-app>
+
