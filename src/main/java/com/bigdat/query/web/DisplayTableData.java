@@ -101,6 +101,7 @@ public class DisplayTableData extends HttpServlet {
             request.setAttribute("siteId", siteId);
             request.setAttribute("devid", devid);
             request.setAttribute("start", start);
+            request.setAttribute("starts", start);
             request.setAttribute("end", end);
             
             request.setAttribute("table", table);
