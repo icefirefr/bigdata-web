@@ -71,7 +71,6 @@ public class DisplayTableData extends HttpServlet {
             long deltH = deltHour(startD, endD);
             int pages = (int) (deltH + Integer.valueOf(pageCount) - 1) / Integer.valueOf(pageCount);
             Date endDs = addHour(startD, Integer.valueOf(pageCount));
-
             List<Map<String, String>> r = dao.findByTime(tableName, siteId, devid, startD, endDs, Long.parseLong(max));
             Table table = new Table();
             LOG.debug("======================================== rows " + r.size());

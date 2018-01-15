@@ -45,7 +45,7 @@
 						</div>
 						<div class="col-md-2">
 							<span>开始时间</span>
-							<span>${starts}</span>
+							<span>${start}</span>
 						</div>
 						<div class="col-md-2">
 							<span>结束时间</span>
