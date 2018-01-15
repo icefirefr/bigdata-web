@@ -2,15 +2,27 @@
 	<display-name>Archetype Created Web Application</display-name>
 	<context-param>
 		<param-name>table_postfix</param-name>
-		<param-value>_point1</param-value>
+		<param-value>_point</param-value>
 	</context-param>
 	<context-param>
 		<param-name>sw_point</param-name>
 		<param-value>sw_info</param-value>
 	</context-param>
 	<context-param>
-		<param-name>xs_point1</param-name>
-		<param-value>xs_info1</param-value>
+		<param-name>xs_point</param-name>
+		<param-value>xs_info</param-value>
+	</context-param>
+	<context-param>
+		<param-name>xyd_point</param-name>
+		<param-value>xyd_info1</param-value>
+	</context-param>
+	<context-param>
+		<param-name>ap_point</param-name>
+		<param-value>ap_info1</param-value>
+	</context-param>
+	<context-param>
+		<param-name>stp_point</param-name>
+		<param-value>stp_info</param-value>
 	</context-param>
 
 	<security-constraint>
