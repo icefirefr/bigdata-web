@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import com.asiabao.hadoop.hbase.HbaseDAO;
 import com.asiabao.hadoop.hbase.HbaseDaofactory;
 import com.asiabao.hadoop.hbase.PageResult;
+import com.bigdat.query.service.WindTrubineTableInfo;
+import com.bigdat.query.service.impl.WindTrubineTableInfoImpl;
 import com.bigdat.query.web.util.JsonUtil;
 import com.bigdat.query.web.vo.Transmission;
 
@@ -33,6 +35,7 @@ public class DisplayTableDataN extends HttpServlet {
     private SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final Log LOG = LogFactory.getLog(HbaseDAO.class);
     private JsonUtil jsonUtil = new JsonUtil();
+    private WindTrubineTableInfo trubineTableInfo = new WindTrubineTableInfoImpl();    
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -77,8 +80,8 @@ public class DisplayTableDataN extends HttpServlet {
             Table table = new Table();
             LOG.debug("======================================== rows " + r.size());
             if (r.size() > 0) {
-                Map<String, String> header = r.get(0);
-                Set<String> keys = header.keySet();
+                //Map<String, String> header = r.get(0);
+                Set<String> keys = trubineTableInfo.getHeader(siteId);//header.keySet();
                 String[] ts = keys.toArray(new String[keys.size()]);
                 List<String> h = Arrays.asList(ts);
                 table.setHeaders(h);
