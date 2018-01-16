@@ -1,6 +1,7 @@
 package com.bigdat.query.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import com.asiabao.hadoop.hbase.HbaseDAO;
 import com.asiabao.hadoop.hbase.HbaseDaofactory;
 import com.asiabao.hadoop.hbase.PageResult;
+import com.bigdat.query.web.util.JsonUtil;
+import com.bigdat.query.web.vo.Transmission;
 
 @WebServlet(name = "DisplayTableDataN", urlPatterns = {"/datasn" })
 public class DisplayTableDataN extends HttpServlet {
@@ -29,12 +32,11 @@ public class DisplayTableDataN extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final Log LOG = LogFactory.getLog(HbaseDAO.class);
+    private JsonUtil jsonUtil = new JsonUtil();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String tableName, siteId, devid, start, end, columnfamily, max, pageCount, startRow, starts;
-            // tableName = request.getParameter("tableName");
-            // columnfamily = request.getParameter("columnfamily");
+            String tableName, siteId, devid, start, end, columnfamily, max, pageCount, startRow, starts,json;
             siteId = request.getParameter("siteId");
             devid = request.getParameter("devid");
             start = request.getParameter("start");
@@ -42,7 +44,7 @@ public class DisplayTableDataN extends HttpServlet {
             startRow = request.getParameter("startRow");
             max = request.getParameter("max");
             pageCount = request.getParameter("pagecount");
-
+            json = request.getParameter("json");
             if (!checkArgs(siteId, devid)) {
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
             }
@@ -103,7 +105,24 @@ public class DisplayTableDataN extends HttpServlet {
             request.setAttribute("startRow", pr.getStartRow());
             request.setAttribute("pagecount", pageCount);
             request.setAttribute("size", table.getDatas().size());
-            request.getRequestDispatcher("/tablen.jsp").forward(request, response);
+
+            if(StringUtils.isNotBlank(json) && json.equals("json")){
+                Transmission tran = new Transmission();
+                tran.setDevid(devid);
+                tran.setSiteId(siteId);
+                tran.setTable(table);
+                tran.setPagecount(pageCount);
+                tran.setSize(String.valueOf(table.getDatas().size()));
+                tran.setStart(start);
+                tran.setStartRow( pr.getStartRow());
+                PrintWriter writer = response.getWriter();
+                writer.write(jsonUtil.toJson(tran));
+                writer.flush();
+                writer.close();
+            }else{
+                request.getRequestDispatcher("/tablen.jsp").forward(request, response);
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

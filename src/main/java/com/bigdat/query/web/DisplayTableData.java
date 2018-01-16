@@ -1,6 +1,7 @@
 package com.bigdat.query.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,8 @@ import org.apache.commons.logging.LogFactory;
 
 import com.asiabao.hadoop.hbase.HbaseDAO;
 import com.asiabao.hadoop.hbase.HbaseDaofactory;
+import com.bigdat.query.web.util.JsonUtil;
+import com.bigdat.query.web.vo.Transmission;
 
 @WebServlet(name = "DisplayTableData", urlPatterns = {"/datas" })
 public class DisplayTableData extends HttpServlet {
@@ -28,10 +31,12 @@ public class DisplayTableData extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     private static final Log LOG = LogFactory.getLog(HbaseDAO.class);
+    
+    private JsonUtil jsonUtil = new JsonUtil();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String tableName, siteId, devid, start, end, columnfamily, max, pageCount, currentPage;
+            String tableName, siteId, devid, start, end, columnfamily, max, pageCount, currentPage,json;
             // tableName = request.getParameter("tableName");
             // columnfamily = request.getParameter("columnfamily");
             siteId = request.getParameter("siteId");
@@ -41,6 +46,8 @@ public class DisplayTableData extends HttpServlet {
             max = request.getParameter("max");
             pageCount = request.getParameter("pagecount");
             currentPage = request.getParameter("currentpage");
+            json = request.getParameter("json");
+            
 
             if (!checkArgs(siteId, devid, start, end, max)) {
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -107,7 +114,24 @@ public class DisplayTableData extends HttpServlet {
             request.setAttribute("pages", pages);
             request.setAttribute("pagecount", pageCount);
             request.setAttribute("size", table.getDatas().size());
-            request.getRequestDispatcher("/table.jsp").forward(request, response);
+            
+            if(StringUtils.isNotBlank(json) && json.equals("json")){
+                Transmission tran = new Transmission();
+                tran.setDevid(devid);
+                tran.setSiteId(siteId);
+                tran.setTable(table);
+                tran.setPagecount(pageCount);
+                tran.setPages(String.valueOf(pages));
+                tran.setSize(String.valueOf(table.getDatas().size()));
+                tran.setStart(start);
+                tran.setEnd(end);
+                PrintWriter writer = response.getWriter();
+                writer.write(jsonUtil.toJson(tran));
+                writer.flush();
+                writer.close();
+            }else{
+                request.getRequestDispatcher("/table.jsp").forward(request, response);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
